@@ -6,8 +6,9 @@ urls=[f"https://kathmandupost.com/",f"https://thehimalayantimes.com/",f"https://
 per_site=[]
 suburls=[]
 text=[]
-
+avoid=["tag","opinion"]
 trigger_words=["election","elections","party"]
+
 def get_url():
     for url in urls:
         per_site.clear()
@@ -17,7 +18,8 @@ def get_url():
             if any(t_word in link.text.lower() for t_word in trigger_words):
                 #print (link.text)
                 absolute_url = urljoin(url,link.get('href'))
-                if absolute_url not in per_site:
+                if absolute_url not in per_site and all(avoid_word not in urlparse(absolute_url).path for avoid_word in avoid):
+                    print(absolute_url)
                     per_site.append(absolute_url)
                 if len(per_site)>2:
                     break
@@ -25,7 +27,7 @@ def get_url():
 
 
 def get_body():
-    print(suburls)
+    #print(suburls)
     for site in suburls:
         for i,url in enumerate(site):
             text.clear()
