@@ -1,3 +1,4 @@
+import os
 import requests
 from bs4 import BeautifulSoup
 from urllib.parse import urljoin, urlparse
@@ -8,6 +9,9 @@ suburls=[]
 text=[]
 avoid=["tag","opinion"]
 trigger_words=["election","elections","party"]
+output_dir="extracted_stuff"
+if not os.path.exists(output_dir):
+    os.mkdir(output_dir)
 
 def get_url():
     for url in urls:
@@ -35,7 +39,7 @@ def get_body():
             content=BeautifulSoup(response.text,"html.parser").find_all('p')
             for paragraph in content:
                 text.append(paragraph)
-            with open(f"extracted_stuff/{urlparse(url).netloc}-{i}.txt",'w') as f:
+            with open(f"{output_dir}/{urlparse(url).netloc}-{i}.txt",'w') as f:
                 for paragraph in text:
                     f.write(paragraph.get_text(strip=True))
 
